@@ -22,85 +22,50 @@ class Intro extends Component {
     return (
       <div className="page-intro">
         <div id="PageIntro">
-          <h2 style={{ color: "#FD9E66" }}>Mimic Recording Studio</h2>
-          <h1>Help us build the voice(s) of Mycroft!</h1>
+          <h2 style={{ color: "#FD9E66" }}>Recording Studio</h2>
           <p>
-            Mycroft's open source Mimic technologies are Text-to-Speech engines,
-            which take a piece of written text and convert it into spoken audio.
-            The latest generation of this technology uses machine learning
-            techniques to create a model, which can speak a specific language,
-            sounding like the voice on which it was trained.
+            Welcome to our recording studio interface. Here you can record your voice
+            to create high-quality audio samples. Follow the guidelines below for the
+            best results.
           </p>
-          <p>
-            The Mimic Recording Studio simplifies the collection of training data from
-            individuals, each of which can be used to produce a distinct voice
-            for Mimic.
-          </p>
-
+  
           <div className="instructions">
             <i className="fas fa-book-open" />
-            <h2>guide</h2>
-            <p>
-              Mimic II preserves the rhythm, tone and pronunciation from source
-              recordings. As a result, it is important for all recordings to use
-              a consistent voice for the personality of the final product.
-            </p>
-
-            <p>
-              To help with this, adopt the assistant persona for all recordings:
-            </p>
-
-            <ul className="persona-desc">
+            <h2>Recording Guidelines</h2>
+  
+            <ul className="recording-guidelines">
               <li>
                 <span className="li-title">
-                  The assistant is knowledgeable and confident, yet humble.
+                  Choose the Right Equipment
                 </span>
-                <br /> The assistant has access to all the world's information,
-                but is aware of his or her own limitations, and doesn't mind
-                being corrected.
+                <br />
+                Use a good quality microphone for clear audio capture. Avoid built-in 
+                laptop microphones when possible. Test your mic before starting a full 
+                recording session.
               </li>
               <li>
                 <span className="li-title">
-                  The assistant loves knowledge and enjoys sharing information
-                  with others.
+                  Speak Clearly and Consistently
                 </span>
-                <br /> This enjoyment can be clearly heard in the energy and
-                enthusiasm in his or her voice.
+                <br />
+                Maintain a steady pace and clear pronunciation. Speak naturally but
+                ensure each word is distinct and well-articulated.
               </li>
               <li>
                 <span className="li-title">
-                  The assistant is persistent, optimistic and upbeat.
+                  Show Enthusiasm
                 </span>
-                <br /> Even if there are errors or misunderstandings, the tone
-                should be positive, without any sign of frustration.
-              </li>
-              <li>
-                <span className="li-title">
-                  The assistant is professional without being stiff or overly
-                  formal.
-                </span>
-                <br /> The assistant speaks with an efficient, yet unrushed
-                pace, similar to what you might hear from a news anchor.
+                <br />
+                Let your energy come through in your voice. An engaged, enthusiastic
+                tone helps create more engaging recordings.
               </li>
             </ul>
-
-            <hr></hr>
+  
+            <hr />
             <p>
-              In addition please follow these advices for your voice recordings:
+              Ready to start? Click the Record button below when you're prepared.
             </p>
-            <ul className="persona-desc">
-              <li><b>Use a good microphone and a quiet recording room setup</b> (no computers fans, air conditioning, ...).</li>
-              <li>Use a text corpus with cleaned numbers/abbreviations and good phoneme coverage.</li>
-              <li>Read neutral, but with a natural speech flow and do not swallow up letters.</li>
-              <li>Adjust tone and pitch with punctuations.</li>
-              <li>Use a constant recording speed.</li>
-              <li>Check your recordings regularly in high volume for background noise.</li>
-              <li>Make breaks regualarly and do not record more than four hours a day.</li>
-              <li>Record error free.</li>
-              </ul>
-
-              <span className="li-title">Happy recording :-)</span>
-
+  
           </div>
           {getName() ? this.renderWelcomeBackMsg() : this.renderInput()}
           <div className="btn_PageIntro">
@@ -109,7 +74,7 @@ class Intro extends Component {
               className="btn"
               onClick={this.handleTrainMimicBtn}
             >
-            Record
+              Record
             </button>
           </div>
         </div>

@@ -1,7 +1,7 @@
-const apiRoot = "http://localhost:5000/";
+const apiRoot = "/api/";  // Changed to use relative path
 
 export const postAudio = (audio, prompt, uuid) => {
-    return fetch(apiRoot + `api/audio/?uuid=${uuid}&prompt=${prompt}`, {
+    return fetch(apiRoot + `audio/?uuid=${uuid}&prompt=${prompt}`, {
         method: "POST",
         body: audio,
         headers: {
@@ -11,19 +11,19 @@ export const postAudio = (audio, prompt, uuid) => {
 };
 
 export const getPrompt = uuid => {
-    return fetch(apiRoot + `api/prompt/?uuid=${uuid}`, {
+    return fetch(apiRoot + `prompt/?uuid=${uuid}`, {
         method: "GET"
     });
 };
 
 export const getUser = uuid => {
-    return fetch(apiRoot + `api/user/?uuid=${uuid}`, {
+    return fetch(apiRoot + `user/?uuid=${uuid}`, {
         method: 'GET'
     })
 }
 
 export const getAudioLen = (uuid, audio) => {
-    return fetch(apiRoot + `api/audio/?uuid=${uuid}&get_len=True`, {
+    return fetch(apiRoot + `audio/?uuid=${uuid}&get_len=True`, {
         method: "POST",
         body: audio,
         headers: {
@@ -37,7 +37,7 @@ export const createUser = (uuid, name) => {
         uuid: uuid,
         user_name: name
     }
-    return fetch(apiRoot + `api/user/`, {
+    return fetch(apiRoot + `user/`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {

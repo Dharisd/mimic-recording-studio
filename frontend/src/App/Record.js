@@ -50,7 +50,7 @@ class Record extends Component {
   render() {
     return (
       <div id="PageRecord">
-        <h1>Mimic Recording Studio</h1>
+        <h1>Recording Studio</h1>
         <TopContainer
           userName={this.name}
           route={this.props.history.push}

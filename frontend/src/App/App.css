@@ -53,7 +53,7 @@ body {
 
 a {
   text-decoration: none;
-  /* color: #22a7f0; */
+  /* color: #031417; */
 	/* max-width: 150px; */
 }
 
@@ -62,7 +62,7 @@ h1 {
   text-align: left;
   padding: 0px 0px 20px 0px;
   /* margin: 0 0; */
-  color: #22a7f0;
+  color: #031417;
   /* font-variant: small-caps; */
   font-size: 2.5em;
   font-weight: 900;
@@ -70,7 +70,7 @@ h1 {
 }
 
 h2 {
-  color: #22a7f0;
+  color: #031417;
   padding: 2px 0px 10px 0px;
   font-size: 1em;
   font-variant: small-caps;
@@ -101,7 +101,7 @@ hr {
 
 .topnav {
   height: 64px;
-  background-color: #22a7f0;
+  background-color: #031417;
   color: white;
   font-weight: 400;
   font-size: 18px;
@@ -208,7 +208,7 @@ hr {
 }
 
 .li-title {
-	color: #22a7f0;
+	color: #031417;
 	font-weight: 700;
 }
 
@@ -293,7 +293,7 @@ hr {
   font-weight: 500;
   font-variant: small-caps;
   /* height: 2.7em; */
-  background-color: #22a7f0;
+  background-color: #031417;
   max-width: 150px;
   text-align: center;
   margin-left: 10px;
@@ -395,7 +395,7 @@ background-color: #0094E5;
 }
 
 .highlight {
-  color: #22a7f0;
+  color: #031417;
 }
 
 /* Box around the "Let's Go" and "Next" buttons */

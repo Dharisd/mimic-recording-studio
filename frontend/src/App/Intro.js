@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { AuthContext } from './AuthContext';
 
 class Intro extends Component {
@@ -9,7 +10,7 @@ class Intro extends Component {
   render() {
     return (
       <AuthContext.Consumer>
-        {({ user }) => (
+        {({ user, loading }) => (
           <div className="page-intro">
             <div id="PageIntro">
               <h2 style={{ color: "#FD9E66" }}>Recording Studio</h2>
@@ -57,15 +58,15 @@ class Intro extends Component {
                 </p>
       
               </div>
-              {this.renderWelcomeBackMsg(user)}
+              {this.renderWelcomeBackMsg(user, loading)}
               <div className="btn_PageIntro">
-                <button
+                <Link
                   id="btn_PageIntro"
                   className="btn"
-                  onClick={this.handleTrainMimicBtn}
+                  to="/record"
                 >
                   Record
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -74,7 +75,8 @@ class Intro extends Component {
     );
   }
 
-  renderWelcomeBackMsg = (user) => {
+  renderWelcomeBackMsg = (user, loading) => {
+    if(!user || loading) return null
     return (
       <div>
         <p>Welcome back {user.user_name}!</p>

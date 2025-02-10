@@ -13,6 +13,8 @@ import rightSVG from "./assets/right.svg";
 import SSVG from "./assets/S.svg";
 
 import { postAudio, getPrompt, getAudioLen, getUser } from "./api";
+import { getUUID, getName } from "./api/localstorage";
+
 
 class Record extends Component {
   constructor(props) {

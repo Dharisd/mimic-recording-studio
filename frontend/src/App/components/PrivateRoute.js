@@ -5,14 +5,23 @@ import { AuthContext } from "../AuthContext";
 const PrivateRoute = ({ component: Component, ...rest }) => {
   return (
     <AuthContext.Consumer>
-      {({ user }) => (
+      {({ user, loading }) => (
         <Route
           {...rest}
           render={(props) =>
-              user || props.location.pathname === '/login' ? (
+            loading ? (
+              <div className="loading-container">
+                <div className="loading-spinner">Loading...</div>
+              </div>
+            ) : user || props.location.pathname === '/login' ? (
               <Component {...props} />
             ) : (
-              <Redirect to="/login" />
+              <Redirect 
+                to={{
+                  pathname: "/login",
+                  state: { from: props.location }
+                }}
+              />
             )
           }
         />

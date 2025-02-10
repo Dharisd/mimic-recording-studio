@@ -1,4 +1,4 @@
-import React, { Component, createContext, useContext } from 'react';
+import React, { Component, createContext } from 'react';
 import { getUUID, removeUUID, setUUID } from "./api/localstorage";
 import { getUser, loginUser, logoutUser } from './api';
 
@@ -16,6 +16,7 @@ export class AuthProvider extends Component {
 
   checkAuth = async () => {
     const uuid = getUUID();
+    console.log('uuid', uuid)
     if (uuid) {
       try {
         const response = await getUser();
@@ -40,6 +41,7 @@ export class AuthProvider extends Component {
       if (response.ok) {
         const data = await response.json();
         this.setState({ user: data.data });
+        setUUID(data.data.uuid);
         return true;
       }
       return false;
@@ -76,12 +78,4 @@ export class AuthProvider extends Component {
       </AuthContext.Provider>
     );
   }
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 }

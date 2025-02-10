@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { AuthContext } from "./AuthContext";
 
 class Login extends Component {
@@ -8,6 +8,7 @@ class Login extends Component {
     username: "",
     password: "",
     error: "",
+    redirectToReferrer: false,
   };
 
   handleChange = (e) => {
@@ -19,20 +20,29 @@ class Login extends Component {
     e.preventDefault();
 
     const { username, password } = this.state;
-    const { history } = this.props;
 
     console.log(login)
 
     try {
-      await login(username, password);
-      history.push("/");
+      const success = await login(username, password);
+      if(success) {
+        this.setState({ redirectToReferrer: true });
+    } else {
+      this.setState({ error: 'Invalid credentials' });
+    }
     } catch (err) {
-      this.setState({ error: "Invalid credentials" });
+      this.setState({ error: "Login failed. Please try again." });
     }
   };
 
   render() {
-    const { username, password, error } = this.state;
+    const { username, password, error, redirectToReferrer } = this.state;
+    const { from } = this.props.location.state || { from: { pathname: '/record' } };
+
+    if (redirectToReferrer) {
+      return <Redirect to={from} />;
+    }
+
     return (
       <AuthContext.Consumer>
         {({ login }) => (
@@ -63,4 +73,4 @@ class Login extends Component {
   }
 };
 
-export default withRouter(Login);
+export default Login;

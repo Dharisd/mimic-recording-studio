@@ -12,15 +12,13 @@ import PSVG from "./assets/P.svg";
 import rightSVG from "./assets/right.svg";
 import SSVG from "./assets/S.svg";
 
-import { postAudio, getPrompt, getUser, createUser, getAudioLen } from "./api";
-import { getUUID, getName } from "./api/localstorage";
+import { postAudio, getPrompt, getAudioLen, getUser } from "./api";
 
 class Record extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      userCreated: false,
       shouldRecord: false,
       displayWav: false,
       blob: undefined,
@@ -40,7 +38,7 @@ class Record extends Component {
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown, false);
-    this.requestUserDetails(this.uuid);
+    this.requestUserDetails();
   }
 
   componentWillUnmount() {
@@ -128,8 +126,8 @@ class Record extends Component {
     });
   };
 
-  requestPrompts = uuid => {
-    getPrompt(uuid)
+  requestPrompts = () => {
+    getPrompt()
       .then(res => res.json())
       .then(res => {
         if (res.data.prompt === "___CORPUS_END___") {
@@ -148,8 +146,8 @@ class Record extends Component {
       });
   };
 
-  requestUserDetails = uuid => {
-    getUser(uuid)
+  requestUserDetails = () => {
+    getUser()
       .then(res => res.json())
       .then(res => {
         if (res.success) {
@@ -160,24 +158,11 @@ class Record extends Component {
             totalTime: res.data.total_time_spoken,
             totalCharLen: res.data.len_char_spoken
           });
-          this.requestPrompts(this.uuid);
+          this.requestPrompts();
         } else {
-          if (this.uuid) {
-            createUser(this.uuid, this.name)
-              .then(res => res.json())
-              .then(res => {
-                if (res.success) {
-                  this.setState({ userCreated: true });
-                  this.requestPrompts(this.uuid);
-                } else {
-                  alert("sorry there is in error creating user");
-                }
-              });
-          } else {
-            alert("sorry there is in error creating user");
+            alert("sorry there is in error fetching user details");
           }
-        }
-      });
+        });
   };
 
   renderWave = () => (
@@ -200,7 +185,7 @@ class Record extends Component {
   );
 
   processBlob = blob => {
-    getAudioLen(this.uuid, blob)
+    getAudioLen(blob)
       .then(res => res.json())
       .then(res =>
         this.setState({
@@ -276,13 +261,13 @@ class Record extends Component {
 
   onNext = () => {
     if (this.state.blob !== undefined) {
-      postAudio(this.state.blob, this.state.prompt, this.uuid)
+      postAudio(this.state.blob, this.state.prompt)
         .then(res => res.json())
         .then(res => {
           if (res.success) {
             this.setState({ displayWav: false });
-            this.requestPrompts(this.uuid);
-            this.requestUserDetails(this.uuid);
+            this.requestPrompts();
+            this.requestUserDetails();
             this.setState({
               blob: undefined,
               audioLen: 0
@@ -297,13 +282,13 @@ class Record extends Component {
 
   skipCurrent = () => {
     // Send static text '___SKIPPED___' as prefix to original phrase to backend API for being filtered out.
-    postAudio("", "___SKIPPED___" + this.state.prompt, this.uuid)
+    postAudio("", "___SKIPPED___" + this.state.prompt)
     .then(res => res.json())
     .then(res => {
       if (res.success) {
         this.setState({ displayWav: false });
-        this.requestPrompts(this.uuid);
-        this.requestUserDetails(this.uuid);
+        this.requestPrompts();
+        this.requestUserDetails();
         this.setState({
           blob: undefined,
           audioLen: 0

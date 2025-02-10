@@ -1,5 +1,7 @@
 flask
 flask-cors
+flask-session
 peewee
 pydub
 gunicorn
+watchdog

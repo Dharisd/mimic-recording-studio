@@ -1,4 +1,5 @@
 let storage = window.localStorage
+const UUID_KEY = 'mimic_uuid'
 
 function guid() {
     function s4() {
@@ -18,10 +19,14 @@ export const getName = () => {
     return storage.getItem('name')
 }
 
-export const createUUID = () => {
-    storage.setItem('uuid', guid())
+export const setUUID = uuid => {
+    storage.setItem(UUID_KEY, uuid)
 }
 
 export const getUUID = () => {
-    return storage.getItem('uuid')
+    return storage.getItem(UUID_KEY)
+}
+
+export const removeUUID = () => {
+    return storage.removeItem(UUID_KEY)
 }

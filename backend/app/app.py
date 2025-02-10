@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, session
 from flask.views import MethodView
 from flask_session import Session
 from flask_cors import CORS
+from functools import wraps
 from .api import UserAPI, PromptAPI, AudioAPI
 import os
 
@@ -15,6 +16,24 @@ Session(app)
 user_api = UserAPI()
 audio_api = AudioAPI()
 prompt_api = PromptAPI()
+
+def login_required(f):
+    @wraps(f)
+    def with_session(*args, **kwargs):
+        if 'user_uuid' not in session:
+            return jsonify(success=False, message="Authentication required"), 401
+        return f(*args, **kwargs)
+    return with_session
+
+def admin_required(f):
+    @wraps(f)
+    def must_be_admin(*args, **kwargs):
+        if 'user_uuid' not in session:
+            return jsonify(success=False, message="Authentication required"), 401
+        if not session.get('is_admin', False):
+            return jsonify(success=False, message="Admin privileges required"), 403
+        return f(*args, **kwargs)
+    return must_be_admin
 
 class Auth(MethodView):
     
@@ -39,19 +58,21 @@ class Auth(MethodView):
 class Users(MethodView):
     """User class reading/writing user object data."""
 
+    @login_required
     def get(self):
         """Get user details based on object instance user-id.
 
         Returns:
             User object with data from SQLite datase table "usermodel".
         """
-        uuid = request.args.get('uuid')
+        uuid = session.get('user_uuid')
         user = user_api.get_user(uuid)
         if user.success:
             return jsonify(success=True, message="success", data=user.data)
         else:
             return jsonify(success=False, message=user.message)
-
+        
+    @admin_required
     def post(self):
         """Save user object to SQLite database.
 
@@ -69,7 +90,9 @@ class Users(MethodView):
 class Audio(MethodView):
     """Audio class saving audio data or getting audio length."""
 
-    def save_audio(self, uuid: str, prompt: str, data: bytes) -> jsonify:
+    @login_required
+    def save_audio(self, prompt: str, data: bytes) -> jsonify:
+        uuid = session.get('user_uuid')
         res = audio_api.save_audio(data, uuid, prompt)
         if res.success:
             return jsonify(success=True, message="sucessfully saved audio")
@@ -79,6 +102,7 @@ class Audio(MethodView):
                 message="did not sucessfully save audio"
             )
 
+    @login_required
     def get_audio_len(self, data: bytes) -> jsonify:
         res = audio_api.get_audio_len(data)
         if res.success:
@@ -86,9 +110,10 @@ class Audio(MethodView):
         else:
             return jsonify(success=False, message="error occured in server")
 
+    @login_required
     def post(self):
         data = request.data
-        uuid = request.args.get('uuid')
+        uuid = session.get('user_uuid')
         prompt = request.args.get('prompt')
         get_len = request.args.get('get_len')
         if uuid and prompt:
@@ -104,14 +129,14 @@ class Audio(MethodView):
 
 class Prompts(MethodView):
 
+    @login_required
     def get(self):
-        uuid = request.args.get('uuid')
+        uuid = session.get('user_uuid')
         prompts = prompt_api.get_prompt(uuid)
         if prompts.success:
             return jsonify(success=True, data=prompts.data)
         else:
             return jsonify(success=False, messsage="failed to get prompt")
-
 
 # registering apis
 auth_view = Auth.as_view('auth')

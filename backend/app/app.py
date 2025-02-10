@@ -1,14 +1,39 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, session
 from flask.views import MethodView
+from flask_session import Session
 from flask_cors import CORS
 from .api import UserAPI, PromptAPI, AudioAPI
+import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
+
+app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY')
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
 
 user_api = UserAPI()
 audio_api = AudioAPI()
 prompt_api = PromptAPI()
+
+class Auth(MethodView):
+    
+    def post(self):
+        credentials = request.get_json(force=True)
+        user = user_api.login_user(credentials)
+        print(user.data)
+        if user.success:
+            session['user_uuid'] = user.data['uuid']
+            session['user_name'] = user.data['user_name']
+            session['is_admin'] = user.data['is_admin']
+            return jsonify(success=True, message="Login successful", data=user.data)
+        else:
+            return jsonify(success=False, message="Invalid credentials"), 401
+    
+    @login_required
+    def delete(self):
+        session.clear()
+        return jsonify(success=True, message="Logout successful")
 
 
 class Users(MethodView):
@@ -89,6 +114,13 @@ class Prompts(MethodView):
 
 
 # registering apis
+auth_view = Auth.as_view('auth')
+app.add_url_rule(
+    '/api/auth/',
+    view_func=auth_view,
+    methods=['POST', 'DELETE']
+)
+
 user_view = Users.as_view('user')
 app.add_url_rule(
     '/api/user/',

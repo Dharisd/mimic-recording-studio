@@ -12,6 +12,11 @@ services:
     - CORPUS=english_corpus.csv
     - APIPORT=5000
     - WEBWORKERS=1
+    - PASSWORD_SALT=${PASSWORD_SALT}
+    - FLASK_SECRET_KEY=${FLASK_SECRET_KEY}
+    - FLASK_ENV=${FLASK_ENV}
+    - FLASK_DEBUG=${FLASK_DEBUG}
+    - PYTHONUNBUFFERED=1
   frontend:
     container_name: mrs-frontend
     build:

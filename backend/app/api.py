@@ -45,7 +45,23 @@ class UserAPI:
                 )
             else:
                 return response(False, message=res.message)
+            
+    def login_user(self, user) -> response:
+        """Verify user password in the SQLite database.
 
+        This function does not update an existing user.
+
+        Args:
+            user (user): User object
+
+        Returns:
+            response: Response object with success (bool), data and an additional response message.
+        """
+        res = DB.check_password(user)
+        if res.success:
+            return response(True,data=res.data)
+        else:
+            return response(False, message=res.message)
 
 class AudioAPI:
     """API to save, get, and extract all audio as zip"""
